@@ -1,6 +1,5 @@
-import { Controller, Request, Get, Post, UseGuards } from '@nestjs/common';
+import { Controller, Request, Get, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { AuthService } from './auth/service/auth.service';
 
 @Controller()
@@ -10,12 +9,6 @@ export class AppController {
   @Get()
   getServerStatus(): string {
     return 'Working !';
-  }
-
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
   }
 
   @UseGuards(JwtAuthGuard)

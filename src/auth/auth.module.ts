@@ -6,10 +6,12 @@ import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { AccountsModule } from 'src/accounts/accounts.module';
 
 @Module({
   imports: [
     UsersModule,
+    AccountsModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
