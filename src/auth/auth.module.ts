@@ -6,6 +6,7 @@ import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { FacebookStrategy } from './strategies/facebook.strategy';
 import { AccountsModule } from 'src/accounts/accounts.module';
 
 @Module({
@@ -22,7 +23,13 @@ import { AccountsModule } from 'src/accounts/accounts.module';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, LocalStrategy, ConfigService, JwtStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    ConfigService,
+    JwtStrategy,
+    FacebookStrategy,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

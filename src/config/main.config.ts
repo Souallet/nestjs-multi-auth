@@ -10,4 +10,10 @@ export default () => ({
   jwt: {
     secret: process.env.JWT_SECRET,
   },
+  facebook: {
+    app: {
+      id: process.env.FACEBOOK_APP_ID,
+      secret: process.env.FACEBOOK_APP_SECRET,
+    },
+  },
 });

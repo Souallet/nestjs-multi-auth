@@ -15,7 +15,17 @@ export class AuthService {
     private accountsService: AccountsService,
   ) {}
 
-  async validateAccount(email: string, password: string): Promise<any> {
+  async validateLocalAccount(email: string, password: string): Promise<any> {
+    if (password === null || password === '') {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Password cannot be empty.',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const account = await this.accountsService.findByEmail(email);
 
     if (!account) {
@@ -38,10 +48,7 @@ export class AuthService {
   }
 
   async login(account: Account) {
-    const payload = { username: account.email, sub: account.password };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    return { access_token: await this.generateToken(account) };
   }
 
   async register(registerLocalDto: RegisterLocalDto) {
@@ -66,6 +73,29 @@ export class AuthService {
       password: hashedPassword,
     };
 
-    return this.accountsService.create(createAccountDto);
+    const registeredAccount = await this.accountsService.create(
+      createAccountDto,
+    );
+    return { access_token: await this.generateToken(registeredAccount) };
+  }
+
+  async loginOAuth(email: string) {
+    let account = await this.accountsService.findByEmail(email);
+
+    if (!account) {
+      account = await this.accountsService.create({
+        email: email,
+        password: null,
+      });
+    }
+
+    return { access_token: await this.generateToken(account) };
+  }
+
+  async generateToken(account: Account) {
+    const payload = {
+      id: account.id,
+    };
+    return this.jwtService.sign(payload);
   }
 }
